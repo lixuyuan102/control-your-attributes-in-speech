@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Page of Controlling your Attributes in Speech Generation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 2000px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h2 {
+            text-align: left;
+        }
+        h1 {
+            text-align: center;
+        }
+        .section {
+            margin: 20px 0;
+        }
+        .section h2 {
+            font-size: 1.5em;
+        }
+        .audio-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-controls button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .audio-controls button:hover {
+            background-color: #0056b3;
+        }
+        .mel-image, .mel-image img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            margin: 20px 0;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .audio-compare {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: nowrap; /* Prevent wrap */
+            align-items: center;
+        }
+        .audio-compare div {
+            text-align: center;
+            flex: 1 1 16%; /* Each model gets 16% of the space */
+            margin: 10px;
+        }
+        select {
+            padding: 8px;
+            margin: 10px 0;
+            width: 200px;
+        }
+        body {
+            padding-right: 500px; /* 适当的偏移量 */
+        }
+        .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 16px;
+        text-align: center;
+        }
+
+        .table th, .table td {
+        padding: 10px;
+        /* 移除边框 */
+        border: none;
+        }
+
+        .table th {
+        background-color: #f2f2f2;
+        }
+
+        audio {
+        width: 100%;
+        max-width: 300px; /* 控制音频播放器的最大宽度 */
+        min-width: 150px; /* 控制音频播放器的最大宽度 */
+        margin: 5px 0;
+        }
+
+        p {
+        font-size: 16px;
+        text-align: center;
+        margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Demo Page of Controlling your Attributes in Speech Generation</h1>
+
+        <!-- 第二部分：选择说话人后选择性别 -->
+        <div class="section">
+            <h2>1. Gender Control</h2>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div>
+                    <label for="speaker-gender">Speaker:</label>
+                    <select id="speaker-gender">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                    </select>
+                </div>
+            
+                <div id="gender-section">
+                    <label for="gender">Gender:</label>
+                    <select id="gender">
+                        <option value="m">male</option>
+                        <option value="f">female</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mel-image">
+                <h4>Mel Spectrogram:</h4>
+                <img id="mel-spectrogram-gender" src="" alt="Mel 谷图">
+            </div>
+            <div class="audio-controls">
+                <h4>Audio:</h4>
+                <audio id="audio-player-gender" controls>
+                    <source id="audio-source-gender" src="" type="audio/mp3">
+                    您的浏览器不支持音频标签。
+                </audio>
+            </div>
+        </div>
+
+        <!-- 第一部分：选择说话人后选择年龄区间 -->
+        <div class="section">
+            <h2>2. Age Control</h2>
+            <div style="display: flex; align-items: center; gap: 20px;">
+            <div>
+                <label for="speaker">Speaker：</label>
+                <select id="speaker">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+            </div>
+
+            <div id="age-section">
+                <label for="age-range">Age：</label>
+                <select id="age-range">
+                    <option value="0">0-12</option>
+                    <option value="1">12-25</option>
+                    <option value="3">25-40</option>
+                    <option value="4">40-55</option>
+                    <option value="5">55-65</option>
+                    <option value="6">65-75</option>
+                    <option value="7">>75</option>
+                </select>
+            </div>
+            </div>
+
+            <div class="mel-image">
+                <h4>Mel Spectrogram:</h4>
+                <img id="mel-spectrogram-age" src="" alt="Mel 谷图">
+            </div>
+            <div class="audio-controls">
+                <h4>Audio:</h4>
+                <audio id="audio-player-age" controls>
+                    <source id="audio-source-age" src="" type="audio/mp3">
+                    您的浏览器不支持音频标签。
+                </audio>
+            </div>
+        </div>
+
+        <!-- GT与四个模型音频对比部分 -->
+        <div class="section">
+            <h2>3. Comparing with other methods</h2>
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th style="text-align:center;"><font size="4">GT</font></th>
+                    <th style="text-align:center;"><font size="4">Operation</font></th>
+                    <th style="text-align:center;"><font size="4">Baseline</font></th>
+                    <th style="text-align:center;"><font size="4">Proposed</font></th>
+                    <th style="text-align:center;"><font size="4">abSRVAE</font></th>
+                    <th style="text-align:center;"><font size="4">abTSVC</font></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- 音频与文本内容 -->
+                  <tr>
+                    <td>
+                      <audio controls>
+                        <source src="compared/proposed/test_70_o.wav" type="audio/mp3">
+                        您的浏览器不支持音频标签。
+                      </audio>
+                    </td>
+                    <td>
+                      <p>Female to Male</p>
+                    </td>
+                    <td>
+                        <audio controls>
+                          <source src="compared/base/test_70_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="compared/proposed/test_70_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="compared/abSRVAE/test_70_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="compared/abTSVC/test_70_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <audio controls>
+                        <source src="compared/proposed/test_21_o.wav" type="audio/mp3">
+                        您的浏览器不支持音频标签。
+                      </audio>
+                    </td>
+                    <td>
+                      <p>Female to Male</p>
+                    </td>
+                    <td>
+                        <audio controls>
+                          <source src="compared/base/test_21_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="compared/proposed/test_21_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="compared/abSRVAE/test_21_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="compared/abTSVC/test_21_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                  </tr>
+                  <td>
+                    <audio controls>
+                      <source src="compared/proposed/test_33_o.wav" type="audio/mp3">
+                      您的浏览器不支持音频标签。
+                    </audio>
+                  </td>
+                  <td>
+                    <p>Female to Male</p>
+                  </td>
+                  <td>
+                      <audio controls>
+                        <source src="compared/base/test_33_g.wav" type="audio/mp3">
+                        您的浏览器不支持音频标签。
+                      </audio>
+                    </td>
+                    <td>
+                      <audio controls>
+                        <source src="compared/proposed/test_33_g.wav" type="audio/mp3">
+                        您的浏览器不支持音频标签。
+                      </audio>
+                    </td>
+                    <td>
+                      <audio controls>
+                        <source src="compared/abSRVAE/test_33_g.wav" type="audio/mp3">
+                        您的浏览器不支持音频标签。
+                      </audio>
+                    </td>
+                    <td>
+                      <audio controls>
+                        <source src="compared/abTSVC/test_33_g.wav" type="audio/mp3">
+                        您的浏览器不支持音频标签。
+                      </audio>
+                    </td>
+                </tr>
+                  <tr>
+                    <td>
+                      <audio controls>
+                        <source src="compared/proposed/test_44_o.wav" type="audio/mp3">
+                        您的浏览器不支持音频标签。
+                      </audio>
+                    </td>
+                    <td>
+                      <p>Male to Female</p>
+                    </td>
+                    <td>
+                        <audio controls>
+                          <source src="compared/base/test_44_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="compared/proposed/test_44_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="compared/abSRVAE/test_44_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="compared/abTSVC/test_44_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <audio controls>
+                        <source src="compared/proposed/test_5_o.wav" type="audio/mp3">
+                        您的浏览器不支持音频标签。
+                      </audio>
+                    </td>
+                    <td>
+                      <p>Male to Female</p>
+                    </td>
+                    <td>
+                        <audio controls>
+                          <source src="compared/base/test_5_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="compared/proposed/test_5_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="compared/abSRVAE/test_5_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="compared/abTSVC/test_5_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <audio controls>
+                        <source src="compared/proposed/test_45_o.wav" type="audio/mp3">
+                        您的浏览器不支持音频标签。
+                      </audio>
+                    </td>
+                    <td>
+                      <p>Male to Female</p>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                          <source src="compared/base/test_45_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="compared/proposed/test_45_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="compared/abSRVAE/test_45_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="compared/abTSVC/test_45_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                  </tr>
+
+
+
+
+                  <tr>
+                    <td>
+                      <audio controls>
+                        <source src="age_eval/proposed/4/test_0_o.wav" type="audio/mp3">
+                        您的浏览器不支持音频标签。
+                      </audio>
+                    </td>
+                    <td>
+                      <p>0-12 years to 40-55 years</p>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                          <source src="age_eval/base/4/test_0_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/proposed/4/test_0_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/abSRVAE/4/test_0_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/abTSVC/4/test_0_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <audio controls>
+                        <source src="age_eval/proposed/1/test_15_o.wav" type="audio/mp3">
+                        您的浏览器不支持音频标签。
+                      </audio>
+                    </td>
+                    <td>
+                      <p>>75 years to 12-25 years</p>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                          <source src="age_eval/base/1/test_15_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/proposed/1/test_15_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/abSRVAE/1/test_15_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/abTSVC/1/test_15_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                  </tr>
+
+
+                  <tr>
+                    <td>
+                      <audio controls>
+                        <source src="age_eval/proposed/5/test_7_o.wav" type="audio/mp3">
+                        您的浏览器不支持音频标签。
+                      </audio>
+                    </td>
+                    <td>
+                      <p>25-40 years to 55-65 years</p>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                          <source src="age_eval/base/5/test_7_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/proposed/5/test_7_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/abSRVAE/5/test_7_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/abTSVC/5/test_7_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <audio controls>
+                        <source src="age_eval/proposed/7/test_2_o.wav" type="audio/mp3">
+                        您的浏览器不支持音频标签。
+                      </audio>
+                    </td>
+                    <td>
+                      <p>12-25 years to >75 years</p>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                          <source src="age_eval/base/7/test_2_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/proposed/7/test_2_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/abSRVAE/7/test_2_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/abTSVC/7/test_2_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <audio controls>
+                        <source src="age_eval/proposed/1/test_12_o.wav" type="audio/mp3">
+                        您的浏览器不支持音频标签。
+                      </audio>
+                    </td>
+                    <td>
+                      <p>65-75 years to 12-25 years</p>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                          <source src="age_eval/base/1/test_12_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/proposed/1/test_12_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/abSRVAE/1/test_12_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/abTSVC/1/test_12_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <audio controls>
+                        <source src="age_eval/proposed/0/test_14_o.wav" type="audio/mp3">
+                        您的浏览器不支持音频标签。
+                      </audio>
+                    </td>
+                    <td>
+                      <p>>75 years to 0-12 years</p>
+                    </td>
+
+                    <td>
+                        <audio controls>
+                          <source src="age_eval/base/0/test_14_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/proposed/0/test_14_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/abSRVAE/0/test_14_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                      <td>
+                        <audio controls>
+                          <source src="age_eval/abTSVC/0/test_14_g.wav" type="audio/mp3">
+                          您的浏览器不支持音频标签。
+                        </audio>
+                      </td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+    </div>
+
+    <script>
+        // 选择说话人后加载对应的年龄区间
+        document.getElementById('speaker').addEventListener('change', function() {
+            const speaker = this.value;
+            const age = document.getElementById('age-range').value;
+            loadSpeakerAgeData(speaker, age);
+        });
+
+        document.getElementById('age-range').addEventListener('change', function() {
+            const speaker = document.getElementById('speaker').value;
+            const age = this.value;
+            loadSpeakerAgeData(speaker, age);
+        });
+
+        // 选择说话人后加载对应的性别
+        document.getElementById('speaker-gender').addEventListener('change', function() {
+            const speaker = this.value;
+            const gender = document.getElementById('gender').value;
+            loadSpeakerGenderData(speaker, gender);
+        });
+
+        // 选择性别后加载对应的音频和 Mel 谷图
+        document.getElementById('gender').addEventListener('change', function() {
+            const speaker = document.getElementById('speaker-gender').value;
+            const gender = this.value;
+            loadSpeakerGenderData(speaker, gender);
+        });
+
+        // 根据说话人选择加载年龄相关的数据
+        function loadSpeakerAgeData(speaker, age) {
+            // 根据说话人选择加载相关的音频和 Mel 谷图
+            const audioFilePath = `demo${speaker}/${age}_${age}_g.wav`;
+            const melSpectrogramFilePath = `demo${speaker}/${age}_${age}_g.jpg`;
+
+            document.getElementById('audio-source-age').src = audioFilePath;
+            document.getElementById('audio-player-age').load();
+            document.getElementById('mel-spectrogram-age').src = melSpectrogramFilePath;
+        }
+
+        // 根据说话人选择加载性别相关的数据
+        function loadSpeakerGenderData(speaker, gender) {
+            const audioFilePath = `gender/test_${speaker}_${gender}.wav`;
+            const melSpectrogramFilePath = `gender/test_${speaker}_${gender}.jpg`;
+
+            document.getElementById('audio-source-gender').src = audioFilePath;
+            document.getElementById('audio-player-gender').load();
+            document.getElementById('mel-spectrogram-gender').src = melSpectrogramFilePath;
+        }
+
+        // 初始化默认加载
+        window.onload = function() {
+            const defaultSpeaker = document.getElementById('speaker').value;
+            const defaultAge = document.getElementById('age-range').value;
+            const defaultGender = document.getElementById('gender').value;
+
+            loadSpeakerAgeData(defaultSpeaker, defaultAge);
+            loadSpeakerGenderData(defaultSpeaker, defaultGender);
+        };
+    </script>
+</body>
+</html>
