@@ -138,7 +138,7 @@
 
             <div class="mel-image">
                 <h4>Mel Spectrogram:</h4>
-                <img id="mel-spectrogram-gender" src="" alt="Mel 谷图">
+                <img id="mel-spectrogram-gender" src="" alt="Just a moment">
             </div>
             <div class="audio-controls">
                 <h4>Audio:</h4>
@@ -181,7 +181,7 @@
 
             <div class="mel-image">
                 <h4>Mel Spectrogram:</h4>
-                <img id="mel-spectrogram-age" src="" alt="Mel 谷图">
+                <img id="mel-spectrogram-age" src="" alt="Just a moment">
             </div>
             <div class="audio-controls">
                 <h4>Audio:</h4>
@@ -670,7 +670,7 @@
             loadSpeakerGenderData(speaker, gender);
         });
 
-        // 选择性别后加载对应的音频和 Mel 谷图
+        // 选择性别后加载对应的音频和 Mel 频谱
         document.getElementById('gender').addEventListener('change', function() {
             const speaker = document.getElementById('speaker-gender').value;
             const gender = this.value;
@@ -679,7 +679,7 @@
 
         // 根据说话人选择加载年龄相关的数据
         function loadSpeakerAgeData(speaker, age) {
-            // 根据说话人选择加载相关的音频和 Mel 谷图
+            // 根据说话人选择加载相关的音频和 Mel 频谱
             const audioFilePath = `demo${speaker}/${age}_${age}_g.wav`;
             const melSpectrogramFilePath = `demo${speaker}/${age}_${age}_g.jpg`;
 
