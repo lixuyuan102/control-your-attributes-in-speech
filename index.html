@@ -213,6 +213,108 @@
                 font-size: 1em;
             }
         }
+
+        /* 新增图片模块样式 */
+        .image-module {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .image-module h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #27ae60;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* 单张图片容器 */
+        .single-img-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .single-img-container img {
+            max-width: 100%;
+            max-height: 800px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* 两张图片左右排列容器 */
+        .double-img-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .double-img-item {
+            display: flex;
+            flex-direction: column; /* 垂直排列：标题 + 图片 */
+            justify-content: flex-start;
+            align-items: center;
+            gap: 15px; /* 标题和图片的间距 */
+        }
+
+        /* 子图标题样式 */
+        .img-subtitle {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: center;
+            padding: 8px 16px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border-bottom: 2px solid #27ae60;
+            width: 80%; /* 标题宽度略小于图片 */
+            margin-top: 5px;
+        }
+
+        .double-img-item img {
+            max-width: 100%;
+            max-height: 500px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* 响应式适配：小屏幕下两张图片改为上下排列 */
+        @media (max-width: 768px) {
+            .abstract-section {
+                padding: 25px;
+                margin: 20px 0;
+            }
+            
+            .abstract-title {
+                font-size: 2em;
+            }
+            
+            .abstract-content {
+                padding: 20px;
+                font-size: 1em;
+            }
+
+            .double-img-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .single-img-container img,
+            .double-img-item img {
+                max-height: 400px;
+            }
+
+            .img-subtitle {
+                width: 90%; /* 小屏幕标题宽度更大 */
+                font-size: 1em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -241,6 +343,36 @@
                 <!-- 动态生成的内容 -->
             </div>
         </div>
+
+        <!-- 第一个图片模块：单张图片 -->
+        <div class="image-module">
+            <h2>Per-age-group Numerical Metrics</h2>
+            <div class="single-img-container">
+                <!-- 替换为你的图片路径/URL，建议使用相对路径或CDN链接 -->
+                <img src="pre-group.png" alt="Experimental Results Summary - Voice Attribute Editing Performance">
+            </div>
+        </div>
+
+        <!-- 第二个图片模块：两张图片左右排列（带独立标题） -->
+        <div class="image-module">
+            <h2>Attribute Prediction Distributions When Manipulating More Continuous Labels</h2>
+            <div class="double-img-container">
+                <div class="double-img-item">
+                    <!-- 左图标题（可自定义文字） -->
+                    <div class="img-subtitle">Age Editing</div>
+                    <!-- 左图：替换为实际路径 -->
+                    <img src="age_editing.png" alt="Age Editing">
+                </div>
+                <div class="double-img-item">
+                    <!-- 右图标题（可自定义文字） -->
+                    <div class="img-subtitle">Gender Editing</div>
+                    <!-- 右图：替换为实际路径 -->
+                    <img src="gender_editing.png" alt="Gender Editing">
+                </div>
+            </div>
+        </div>
+
+
     </div>
 
     <script>
